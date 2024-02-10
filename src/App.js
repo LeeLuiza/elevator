@@ -5,7 +5,7 @@ function ElevatorShaft() {
   const [currentFloor, setCurrentFloor] = useState(0); //текущий этаж
   const [destinationFloors, setDestinationFloors] = useState([]); //список этажей
   const [isMoving, setIsMoving] = useState(false); //движется ли лифт в данный момент
-  let index = 0;
+  const [index, setIndex] = useState(0);
 
   const handleCallElevator = (floor) => { //добавляет список целей
     if (!destinationFloors.includes(floor)) {
@@ -34,14 +34,14 @@ function ElevatorShaft() {
   }, [destinationFloors, isMoving]);
 
   const moveElevator = () => { //проверяет в каком направлении ехать
-    index = destinationFloors.length - 1;
+    setIndex(index => destinationFloors.length - 1);
     let max = destinationFloors[destinationFloors.length - 1]
     if (currentFloor !== 0) {
       for (let i = destinationFloors.length - 1; i >= 0; i--) {
         console.log(destinationFloors[i] + "<" + currentFloor);
         if (destinationFloors[i] < currentFloor) {
           max = destinationFloors[i];
-          index = destinationFloors.indexOf(max);
+          setIndex(destinationFloors.indexOf(max));
           break;
         }
       }
@@ -96,7 +96,7 @@ function ElevatorShaft() {
   }
 
   const DeleteElement = (destination) => {
-    index = destinationFloors.indexOf(destination);
+    setIndex(index => destinationFloors.indexOf(destination));
     destinationFloors.splice(index, 1);
   }
 
@@ -109,7 +109,7 @@ function ElevatorShaft() {
       {[...Array(10).keys()].map((_, index) => (
         <button key={index+1} className="floor-button" onClick={() => handleCallElevator(9 - index)}>{10 - index}</button>
       ))}
-      <div className="elevator" style={{bottom: `${(currentFloor) * 50}px`}}></div>
+      <div className="elevator" style={{bottom: `${currentFloor * 50}px`}}></div>
     </div>
   );
 }
